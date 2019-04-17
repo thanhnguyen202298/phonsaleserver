@@ -3,6 +3,8 @@ using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+
 using System.Drawing.Imaging;
 using System;
 
@@ -178,6 +180,26 @@ namespace phoneser.Controllers
             try
             {
                 dt = Ql.getTableSP("getSpeakInform", param);
+                state = 1; smstr = "success";
+            }
+            catch (Exception ex) { smstr = ex.Message; }
+            return Ok(new { status = state, sms = smstr, data = dt });
+        }
+        
+        [HttpGet]
+        [Route("getChatMsg")]
+        public IHttpActionResult getChatMsg(string allorid, string fromdate = "", int page = 1)
+        {
+            OleDbParameter[] param = new OleDbParameter[4];
+            param[0] = new OleDbParameter("@user_code", allorid);
+            param[1] = new OleDbParameter("@fromdate", fromdate);
+            param[2] = new OleDbParameter("@page", page);
+            
+            int state = 0; string smstr = "Fail";
+            DataTable dt = null;
+            try
+            {
+                dt = Ql.getTableSP("getChatMsg", param);
                 state = 1; smstr = "success";
             }
             catch (Exception ex) { smstr = ex.Message; }
