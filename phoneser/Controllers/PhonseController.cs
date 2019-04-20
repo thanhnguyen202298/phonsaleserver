@@ -3,8 +3,8 @@ using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Linq;
-
 using System.Drawing.Imaging;
 using System;
 
@@ -18,6 +18,85 @@ namespace phoneser.Controllers
         public PhonseController()
         {
             Ql = new HawkQL();
+        }
+
+
+        [HttpPost]
+        [Route("saveuser")]
+        public IHttpActionResult saveUser(string UserName, string Phone, string Pass, string Address, string Email, string UserCode = null, string ModifyBy = null, int Staffin = 0, string FullName = "ngtha f a")
+        {
+            OleDbParameter[] param = new OleDbParameter[10];
+            param[0] = new OleDbParameter("@UserCode", UserCode);
+            param[1] = new OleDbParameter("@UserName", UserName);
+            param[2] = new OleDbParameter("@Phone", Phone);
+            param[3] = new OleDbParameter("@Pass", Pass);
+            param[4] = new OleDbParameter("@Address", Address);
+            param[5] = new OleDbParameter("@Email", Email);
+            param[6] = new OleDbParameter("@Staffin", Staffin);
+            param[7] = new OleDbParameter("@ModifyBy", ModifyBy);
+            param[8] = new OleDbParameter("@ModifyOn", DateTime.Now);
+            param[9] = new OleDbParameter("@FullName", FullName);
+
+            int state = 0; string smstr = "Fail";
+            DataTable dt = null;
+            if (UserCode == null)
+            {
+                UserCode = Guid.NewGuid().ToString();
+                param[0] = new OleDbParameter("@UserCode", UserCode);
+                try
+                {
+                    int n = Ql.executeSp("saveUser", param);
+                    if (n > 0)
+                    {
+                        state = 1; smstr = "success";
+                    }
+                    else smstr += "save: data was wrong";
+                }
+                catch (Exception ex) { smstr ="save: "+ ex.Message; }
+            }
+            else
+            {
+                try
+                {
+                    int n = Ql.executeSp("updateuser", param);
+                    if (n > 0)
+                    {
+                        state = 1; smstr = "success";
+                    }
+                    else smstr += "update: data was wrong";
+                }
+                catch (Exception ex) { smstr = "update: " + ex.Message; }
+            }
+            return Ok(new { status = state, sms = smstr, data = dt });
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult login(string user, string pas)
+        {
+            string date = DateTime.Now.ToShortDateString();
+            byte[] byt = Encoding.UTF8.GetBytes(date.ToCharArray());
+            date = Convert.ToBase64String(byt);
+
+            OleDbParameter[] param = new OleDbParameter[3];
+            param[0] = new OleDbParameter("@key", date);
+            param[1] = new OleDbParameter("@user", user);
+            param[2] = new OleDbParameter("@pass", pas);
+
+            int state = 0; string smstr = "Fail";
+            DataTable dt = null;
+            try
+            {
+                int n = Ql.executeSp("savekeytoken", param);
+                if (n > 0)
+                {
+                    dt = Ql.getTableSP("getlogin", param);
+                    state = 1; smstr = "success";
+                }
+                else smstr = "user is not available";
+            }
+            catch (Exception ex) { smstr = ex.Message; }
+            return Ok(new { status = state, sms = smstr, data = dt });
         }
 
         [HttpGet]
@@ -155,16 +234,6 @@ namespace phoneser.Controllers
             return Ok(new { status = state, sms = smstr, data = dt });
         }
 
-
-        //       []
-        //-- Add the parameters for the stored procedure here
-
-        //   @allorid nvarchar(50),
-        //@ Varchar(30),
-        //@ Varchar(30),
-        //@page int = 1
-
-
         [HttpGet]
         [Route("getSpeakInform")]
         public IHttpActionResult getSpeakInform(string allorid, string fromdate = "", string todate = "", int page = 1)
@@ -185,16 +254,16 @@ namespace phoneser.Controllers
             catch (Exception ex) { smstr = ex.Message; }
             return Ok(new { status = state, sms = smstr, data = dt });
         }
-        
+
         [HttpGet]
         [Route("getChatMsg")]
         public IHttpActionResult getChatMsg(string allorid, string fromdate = "", int page = 1)
         {
-            OleDbParameter[] param = new OleDbParameter[4];
+            OleDbParameter[] param = new OleDbParameter[3];
             param[0] = new OleDbParameter("@user_code", allorid);
             param[1] = new OleDbParameter("@fromdate", fromdate);
             param[2] = new OleDbParameter("@page", page);
-            
+
             int state = 0; string smstr = "Fail";
             DataTable dt = null;
             try
@@ -253,22 +322,5 @@ namespace phoneser.Controllers
             return Ok(new { status = n, sms = "thanhss", data = howst });
         }
 
-        //[HttpGet]
-        //[Route("onlytest")]
-        //public IHttpActionResult getbrand1()
-        //{
-        //    OleDbParameter[] param = new OleDbParameter[2];
-        //    param[0] = new OleDbParameter("@onid", "all");
-        //    param[1] = new OleDbParameter("@page", 1);
-
-        //    DataTable dt = Ql.getTableSP("GetBrandPhone", param);
-
-        //    byte[] imgBytes = (byte[])dt.Rows[0][3];
-        //    MemoryStream tmpStream = new MemoryStream();
-        //    tmpStream.Write(imgBytes, 0, imgBytes.Length);
-        //    Image m = Image.FromStream(tmpStream);
-
-        //    return Ok(new { status = 1, sms = "thanhss", data = imgBytes });
-        //}
     }
 }
