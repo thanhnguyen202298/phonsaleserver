@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewBag.Title = "CreateSpecs";
+    Layout = "~/Views/Shared/ClientLayout.cshtml";
+}
+
+<div class="box col-md-12" ng-controller="SpecsController">
+    <div class="box-header with-border">
+        <h3 class="box-title">Thêm loại thông số sản phẩm</h3>
+    </div>
+    <div class="box-body">
+        <div class="col-sm-6 col-xs-12">
+            <form name="specadd" novalidate>
+                <div class="box box-solid box-primary">
+                    <div class="box-body">
+                        <div>
+                            <div class="label-primary">Nhập tên thông số</div>
+                            <input required type="text" name="inpname" class="form-control" ng-model="spec.Name" /><p></p>
+                            <div class="text-danger" ng-show="">nhap text</div>
+                        </div>
+                        <div>
+                            <input type="text" ng-model="newValue" />
+                            <button class="btn btn-default" ng-click="AddValue()">Add</button>
+
+                        </div>
+
+                        <div>
+                            @*List Values-able in specification*@
+                            <ul class="list-group">
+                                <li ng-click="clickV(v)" ng-class="{'label-info':edit==v}" class="list-group-item" ng-repeat="v in values track by $index">
+                                    <span>{{v}}</span>
+                                    <span style="float:right">
+                                        <button class="btn btn-xs btn-danger" ng-disabled="edit!=v" ng-click="deleteV(v)">Remove</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item" ng-show="values.length<1"></li>
+                            </ul>
+                        </div>
+                        <div style="text-align:center">
+                            <button ng-click="Save()" type="submit" class="btn btn-success">Lưu</button>&nbsp;
+                            <button ng-click="spec={Options: []}" type="reset" class="btn btn-warning">Tạo mới</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            @*List specification*@
+            <div class="box box-solid box-warning">
+                <div class="box-title label-warning">Danh sách thông số đã thêm</div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-order">
+                        <tr ng-click="clickSpec(x)" ng-class="{'label-info':spec.ID==x.ID}" ng-repeat="x in listSpecs">
+                            <td>{{$index+1}}</td>
+                            <td>
+                                {{x.Name}}
+                            </td>
+                            <td>
+                                <button class="btn btn-xs btn-danger" ng-disabled="spec.ID!=x.ID" ng-click="deleteSpec(x)">Remove</button>
+                            </td>
+                        </tr>
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scription{
+    <script>
+        app.controller("SpecsController", ["$scope", "$http", function ($scope, $http) {
+            t = $scope
+            t.Save = function () {
+                if (t.spec.Name.length > 1) {
+
+                    if (typeof t.spec.ID != typeof "")
+                        $http.post("/Category/SaveSpecs", JSON.stringify(t.spec)).then(function (res) {
+                            t.spec.ID = res.data
+                            t.listSpecs.unshift(t.spec)
+                            t.spec = {}
+                            t.values = []
+                        })
+                        //alert("new ís "+t.spec.ID)
+                    else $http.put("/Category/UpdateSPec", JSON.stringify(t.spec)).then(function (res) {
+                        alert('update, thành công')
+                        t.spec = {}
+                        t.values = []
+                    })
+                }
+
+                else alert("nhap ten")
+            }
+            t.values = [];
+            t.AddValue = function () {
+                if (t.newValue != null && t.newValue.length>0) {
+                    t.values.push(angular.copy(t.newValue));
+                    t.newValue = '';
+                }
+
+                t.spec.Options = t.values.join(";");
+
+            }
+            t.deleteV = (v) => {
+                t.values.splice(t.values.indexOf(v), 1)
+                t.spec.Options = t.values.join(";");
+
+            }
+
+            t.clickV = (v) => {
+                t.edit = t.edit == v ? '' : v
+            }
+
+            t.clickSpec = (s) => {
+                if (t.spec.ID == s.ID) t.spec = {}
+                else {
+                    t.spec = s;
+                    if (typeof s.Options == typeof "")
+                        t.values = angular.copy(s.Options.split(';'))
+                    else t.values=[]
+                }
+            }
+
+            t.spec = {}
+            t.listSpecs = {}
+
+            t.getList = function () {
+                $http.get("/Category/getSpecification").then(function (res) {
+                    t.listSpecs = res.data
+                })
+            }
+            t.getList()
+            t.deleteSpec = (x) => {
+
+                $http.delete("/Category/delSpec?s=" + x.ID).then(() => {
+                    t.getList()
+                })
+            }
+        }])
+
+    </script>
+}
+

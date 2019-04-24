@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/ClientLayout.cshtml";
+}
+
+
+<div class="row row-wrap" id="masonry">
+    <div class="col-sm-6 col-md-3 col-masonry" ng-repeat="x in Items | filter:x.CategoryId=idcate">
+        <div class="product-thumb">
+            <header class="product-header">
+                <a ng-href="{{hrf(x.ID)}}"><img class="item" ng-src="{{hrfImg(x.ImageShow||x.Image)}}" alt="Image Alternative text" title="" /></a>
+            </header>
+            <div class="product-inner">
+                <h5 class="product-title">{{x.Name}}</h5>
+                <div class="product-meta">
+                    <ul class="product-price-list">
+                        <li>
+                            <span class="product-price">{{toCc(x.Price)}}&nbsp;<sup style="text-decoration:underline">đ</sup></span>
+                        </li>
+                        <li>
+                            <span class="product-old-price">{{x.OldPrice?toCc(x.OldPrice):null}}&nbsp;<sup style="text-decoration:underline">đ</sup></span>
+                        </li>
+                    </ul>
+                    <ul class="product-price-list">
+                        <li style="margin-top:5px; cursor:pointer" class="" ng-click="addtoCart(x)"><span class="btn-warning"><i class="fa fa-shopping-cart"></i> Mua</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

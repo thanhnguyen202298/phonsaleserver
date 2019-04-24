@@ -1,0 +1,282 @@
+﻿
+@{
+    ViewBag.Title = "PostNewProduction";
+    ViewBag.getIP = Request.UserHostAddress;
+    if (ViewBag.getIP == "") { Response.Redirect("/Production/errorn/"); }
+
+    Layout = "~/Views/Shared/ClientLayout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/bootstrap3-wysihtml5.css" />
+<style>
+    .label-primary,
+    .label-info,
+    .label-success,
+    .label-warning {
+        font-weight: bold;
+        padding-left: 5px
+    }
+
+    .box-title {
+        font-weight: bold
+    }
+
+    #btnSelect {
+        position: relative;
+    }
+
+        #btnSelect input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+</style>
+
+<div class="box" ng-controller="ProductionController">
+    <div class="box-header with-border"><h3 class="box-title">Thêm sản phẩm</h3></div>
+    <div class="box-body">
+        <div class="col-xs-12">
+            <form name="formAction" novalidate>
+
+                <div class="col-md-6">
+                    <div class="box box-solid box-info">
+                        <div class="box-body">
+                            <div class="label-primary">Hãng sản xuất</div>
+                            <select name="brand" required ng-change="Product.BrandId=BrandId.ID" ng-model="BrandId" ng-options="b.Name for b in brands " class="form-control"></select>
+
+                            <div class="text-danger" ng-show="formAction.brand.$error.required">bắt buộc *</div>
+                            <p></p>
+                            <div class="label-success">Nhập tên sản phẩm:</div>
+                            <input placeholder="nhập tên sản phẩm" ng-model="Product.Name" class="form-control" type="text" name="nameProd" required />
+                            <div class="text-danger" ng-show="formAction.nameProd.$error.required">không được để trống</div>
+
+                            <p></p>
+                            <div class="label-primary">Chọn nhóm sản phẩm:</div>
+                            <select name="nhomprod" required ng-change="Product.CategoryId=cate.ID" ng-model="cate" ng-options="i.Name for i in cates" class="form-control"></select>
+                            <div class="text-danger" ng-show="formAction.nhomprod.$error.required">bắt buộc *</div>
+                            <p></p>
+
+                            <div class="label-warning">Nhập giá sản phẩm:</div>
+                            <input placeholder="nhập giá sản phẩm" ng-model="Product.Price" class="form-control" type="text" name="priceProd" required />
+                            <div class="text-danger" ng-show="formAction.priceProd.$error.required">không được để trống</div>
+                            <p></p>
+
+                            <div class="label-default">Nhập giá Cũ (optional):</div>
+                            <input placeholder="nhập giá sản phẩm" ng-model="Product.OldPrice" class="form-control" type="text" name="priceOld" />
+
+
+                            <p></p>
+                            <div class="label-info">Hình ảnh</div><div class="box box-solid box-info">
+                                <div style="text-align:center;margin-top:2px">
+                                    <div class="btn btn-primary" id="btnSelect">
+                                        <input type="file" name="file" ng-model="file" id="fileImage" value="" />
+                                        <span><i class="fa fa-cloud-upload"></i> Chon hinh anh</span>
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div ng-repeat="x in Product.Image.split(';')">
+                                    <div class="label label-default">
+                                        <span>làm hình đại diện</span>
+                                        <input class="box-info" type="checkbox" id="hihi{{getIdImg(x)}}" ng-click="addChecked(x)" />
+                                    </div>
+                                    <img style="margin:20px;width:300px" ng-src="{{x}}" alt="No Immage" />
+                                </div>
+                            </div>
+                            <p></p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6">
+                    <div class="box box-solid box-info">
+                        <div class="box-body">
+                            <div class="label-default">Mô tả sản phẩm (optional):</div>
+                            <textarea style="width:100%;height:100px" name="lessdesc" id="desc" ng-model="Product.LessDesc" maxlength="80"></textarea>
+
+                            <div class="label-success">Thông số sản phẩm:</div>
+
+                            <textarea id="specifica"></textarea>
+                            <div class="text-danger" ng-show="formAction.specifiProd.$error.required">bắt buộc *</div>
+                            <p></p>
+                        </div>
+                    </div>
+                    <p></p>
+
+                    <div style="text-align:center"><button class="btn btn-lg btn-danger" ng-click="SaveProduction()" type="submit">Save</button></div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="upload_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Uploading content..!!!</h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress" id="process">
+                    <div class="progress-bar progress-bar-primary progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        <span class="sr-only"><span id="proccessUploading">0</span>% Complete (success)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="stopUpload()" class="btn btn-primary pull-left" data-dismiss="modal">Cancel Uploading..</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scription{
+    <script>
+        //app.filter('myFilter', function () {
+        //    return function (b) {
+        //        var name = b.Name
+        //        var desc = b.Description
+        //        desc = desc.toLowerCase()
+        //        if (desc.match(/Hãng sản xuất/) || desc.match(/hang san xuat/))
+        //            return b
+        //        else return null
+        //    };
+        //});
+        app.controller("ProductionController", ["$scope", "$http", function ($scope, $http) {
+            t = $scope
+            t.Product = { Image: "", ImageShow: '' }
+            t.brands = []
+            t.cates = []
+            t.imgss = "";
+            t.addChecked = function (x) {
+                var name = t.getIdImg(x)
+                var checked = $('#hihi' + name).is(':checked');
+
+                if (checked) {
+                    if (t.imgss.length < 3)
+                        t.imgss += x
+                    else t.imgss += ';' + x
+                } else {
+                    var index = t.imgss.indexOf(x)
+                    if (index > 0) {//middle or end
+                        var c = t.imgss.substr(0, index - 1)
+                        t.imgss = c + t.imgss.substr(index + x.length);
+                    }
+                    else if (index == 0)//start
+                        t.imgss = t.imgss.substr(x.length + 1);
+                }
+                t.Product.ImageShow = t.imgss
+            }
+            t.getIdImg = function (x) {
+                if (x)
+                    return x.substr(x.lastIndexOf('/') + 1, x.lastIndexOf('.') - x.lastIndexOf('/') - 1);
+            }
+
+            t.getCategory = function () {
+                $http.get("/Category/GetAll").then(function (rs) {
+
+                    t.brands = rs.data.filter(function (x) {
+                        return x.Description.indexOf("[brands]") > 0
+                    })
+                    t.cates = rs.data.filter(function (x) {
+                        return x.Description.indexOf("[brands]") < 0
+                    })
+                });
+            }
+            t.getCategory();
+
+            t.SaveProduction = function () {
+                if (t.formAction.$valid) {
+
+                    t.Product.Specifications = CKEDITOR.instances['specifica'].getData()
+                    $http.post("/production/saveProduct", JSON.stringify(t.Product)).then(function (res) {
+                        alert('đã lưu')
+                        window.location.reload();
+                    })
+                }
+                else alert('vui lòng điền đầy đủ form')
+
+            }
+
+            t.getListProduction = function () {
+                //
+            }
+
+            t.loadedend = (v) => {
+                if (!t.Product.Image)
+                    t.Product.Image = v
+                else t.Product.Image += ";" + v
+            }
+
+            //uploafdr da iage
+            $('#fileImage').change(function () {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    //check format
+                    reader.onload = function (e) {
+                        if (e.target.result.match(/^data:image\//)) {
+                            $('#previewImage').attr('src', e.target.result).show();
+                        } else {
+                            alert("Hình ảnh không đúng định dạng !");
+                        }
+                    };
+                    reader.readAsDataURL(this.files[0]);
+
+                    var fd = new FormData();
+                    //         key 'image' in form ->retries at serverside
+                    fd.append('image', document.getElementById('fileImage').files[0]);
+
+                    $('#upload_modal').modal('show');
+                    $('#process>.progress-bar').css("width", '0%')
+
+                    var xhr = new XMLHttpRequest(); t.rqx = xhr;
+                    xhr.onreadystatechange = function () {
+
+                        if (this.readyState == 4 && this.status == 200) {
+                            var res = this.response;
+                            t.$apply(function () {
+                                t.loadedend(res.substr(1, res.length - 2))
+                            });
+                        }
+                    }
+                    xhr.upload.addEventListener("progress", function (e) {
+                        var x = Math.round(100 * e.loaded / e.total)
+                        $('#process>.progress-bar').css("width", x + '%')
+                        $('#upload_modal>.modal-title').text(x + "%")
+
+
+                        if (x == 100) $('#upload_modal').modal('hide')
+
+                    }, false);
+
+                    xhr.open("POST", "/Category/UploadImage");
+                    xhr.send(fd);
+
+                }
+            });
+
+            stopUpload = function () {
+                t.rqx.abort()
+            }
+            //uploaded
+
+        }])
+
+    </script>
+    <script src="/Content/cke/ckeditor.js"></script>
+    <script src="/Content/bootstrap3-wysihtml5.all.js"></script>
+    
+    <script>
+        $(function () {
+            // Replace the <textarea id="editor1"> with a CKEditor
+            // instance, using default configuration.
+            CKEDITOR.replace('specifica');
+            //bootstrap WYSIHTML5 - text editor
+            //$(".textarea").wysihtml5();
+        });
+    </script>
+}

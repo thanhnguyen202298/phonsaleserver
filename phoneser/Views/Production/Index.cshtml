@@ -1,0 +1,467 @@
+﻿
+@{
+    ViewBag.Title = "Chi tiết sản phẩm ";
+
+    Layout = "~/Views/Shared/ClientLayout.cshtml";
+}
+@section DetailProduct{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <aside class="sidebar-left">
+                    <div class="sidebar-box">
+                        <h5>Sản Phẩm vừa xem</h5>
+                        <ul class="thumb-list">
+                            <li ng-repeat="x in vieweds">
+                                <a ng-href="{{hrf(x)}}">
+                                    <img ng-src="{{hrfImg(x.ImageShow)}}" alt="Image Alternative text" title="{{x.Name}}" />
+                                </a>
+                                <div class="thumb-list-item-caption">
+                                    <h5 class="thumb-list-item-title"><a ng-href="{{hrf(x)}}">{{x.Name}}</a></h5>
+                                    <p style="font-size:15px;font-weight:600;color:#d12d2d" class="thumb-list-item-price">{{toCc(x.Price)}}</pstyle="font-size:18px;font-weight:bold;color:#d12d2d">
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="sidebar-box">
+                        <h5>Sản phẩm phổ biến</h5>
+                        <ul class="thumb-list">
+                            <li ng-repeat="x in pupolarItem">
+                                <a ng-href="{{hrf(x)}}">
+                                    <img ng-src="{{hrfImg(x.ImageShow)}}" alt="Image Alternative text" title="{{x.Name}}" />
+                                </a>
+                                <div class="thumb-list-item-caption">
+                                    <h5 class="thumb-list-item-title"><a ng-href="{{hrf(x)}}">{{x.Name}}</a></h5>
+                                    <p style="font-size:15px;font-weight:600;color:#d12d2d" class="thumb-list-item-price">{{toCc(x.Price)}}</p>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="sidebar-box">
+                        <h5>Sản phẩm ưa chuộng</h5>
+                        <ul class="thumb-list">
+                            <li ng-repeat="x in rankingboard">
+                                <a ng-href="{{hrf(x)}}">
+                                    <img ng-src="{{hrfImg(x.ImageShow)}}" alt="Image Alternative text" title="Hot mixer" />
+                                </a>
+                                <div class="thumb-list-item-caption">
+                                    <ul class="icon-group icon-list-rating" title="4">
+                                        <li>
+                                            <i class="fa fa-star"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star"></i>
+                                        </li>
+                                    </ul>
+                                    <h5 class="thumb-list-item-title"><a href="#">{{x.Name}}</a></h5>
+                                    <p style="height:20px;overflow:hidden" class="thumb-list-item-author">{{x.LessDesc}}</p>
+                                    <p style="font-size:15px;font-weight:600;color:#d12d2d" class="thumb-list-item-price">{{toCc(x.Price)}}</p>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+            <div class="col-md-9">
+                <div id="review-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
+                    <h3>Thêm Đánh giá</h3>
+                    <form>
+                        <div class="form-group">
+                            <label>Tên</label>
+                            <input type="text" placeholder="e.g. John Doe" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input type="text" placeholder="e.g. jogndoe@gmail.com" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Commnent</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>đánh giá</label>
+                            <ul class="icon-list icon-list-inline star-rating" id="star-rating">
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <input type="submit" class="btn btn-danger" value="Submit" />
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="fotorama" data-nav="thumbs" data-allowfullscreen="1" data-thumbheight="150" data-thumbwidth="150">
+                            <img ng-src="{{x}}" ng-repeat="x in ProductDetails.ImageShow.split(';')" alt="Image Alternative text" title="{{ProductDetails.Name}}" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="product-info box">
+                            <ul class="icon-group icon-list-rating text-color" title="2.5/5 rating">
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-star"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-star-half-empty"></i>
+                                </li>
+                            </ul>	<small><a href="#" class="text-muted"></a></small>
+                            <h3>{{ProductDetails.Name}}</h3>
+                            <p style="font-size:18px;font-weight:bold;color:#d12d2d" class="product-price">{{toCc(ProductDetails.Price)}}&nbsp;<sup ng-show="ProductDetails.Price" style="text-decoration:underline">đ</sup></p>
+                            <span style="text-decoration:line-through">{{toCc(ProductDetails.OldPrice)}}&nbsp;<sup ng-show="ProductDetails.Price" style="text-decoration:underline">đ</sup></span>
+                            <p class="text-smaller text-muted">{{ProductDetails.LessDesc}}</p>
+                            <ul class="list-inline">
+                                <li>
+                                    <button ng-click="addtoCart(ProductDetails)" class="btn btn-warning"><i class="fa fa-shopping-cart"></i> Mua</button>
+                                </li>
+                                @*<li>
+                                        <a href="#" class="btn"><i class="fa fa-star"></i> To Wishlist</a>
+                                    </li>*@
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="gap"></div>
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a href="#tab-1" data-toggle="tab"><i class="fa fa-pencil"></i>Mô tả</a>
+                        </li>
+                        <li>
+                            <a href="#tab-2" data-toggle="tab"><i class="fa fa-info"></i>Thông số kỹ thuật</a>
+                        </li>
+                        <li>
+                            <a href="#tab-3" data-toggle="tab"><i class="fa fa-truck"></i>thanh toán và chuyển hàng</a>
+                        </li>
+                        <li>
+                            <a href="#tab-4" data-toggle="tab"><i class="fa fa-comments"></i>Đánh giá</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab-1">
+                            <div id="my-carousel" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators" style="background:rgba(42, 29, 29, 0.57);width:100%;margin-left:-400px">
+                                    <li data-target="#my-carousel" style="height:40px;width:40px;" data-slide-to="{{$index}}" ng-repeat="x in ProductDetails.Image.split(';')"></li>
+
+                                </ol>
+                                <div class="carousel-inner">
+                                    <div class="item" ng-repeat="x in ProductDetails.Image.split(';')">
+                                        <img style="height:450px;width:inherit;" class="d-block w-100" ng-src="{{hrfImg(x)}}" style="" alt="Image Alternative text" title="Old No7" />
+                                    </div>
+                                </div>
+                                <a class="carousel-control left" href="#my-carousel" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control right" href="#my-carousel" data-slide="next"></a>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab-2">
+                            <table class="table table-striped mb0">
+                                <p class="tolisspec" ng-bind-html="ToHtmlText(ProductDetails.Specifications)"></p>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="tab-3">
+                            <p></p>
+                        </div>
+                        <div class="tab-pane fade" id="tab-4">
+                            <ul class="comments-list">
+                                <li>
+                                    <!-- REVIEW -->
+                                    <article class="comment">
+                                        <div class="comment-author">
+                                            <img src="img/50x50.png" alt="Image Alternative text" title="Gamer Chick" />
+                                        </div>
+                                        <div class="comment-inner">
+                                            <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-o"></i>
+                                                </li>
+                                            </ul><span class="comment-author-name">Bernadette Cornish</span>
+                                            <p class="comment-content">Metus nam scelerisque class est erat conubia rhoncus eu platea convallis dapibus etiam donec facilisi imperdiet lorem ornare nec ad netus hendrerit ligula curae sodales</p>
+                                        </div>
+                                    </article>
+                                </li>
+                                <li>
+                                    <!-- REVIEW -->
+                                    <article class="comment">
+                                        <div class="comment-author">
+                                            <img src="img/50x50.png" alt="Image Alternative text" title="Ana 29" />
+                                        </div>
+                                        <div class="comment-inner">
+                                            <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-o"></i>
+                                                </li>
+                                            </ul><span class="comment-author-name">Joseph Watson</span>
+                                            <p class="comment-content">Mollis curabitur tincidunt consequat adipiscing potenti conubia elit senectus consequat vitae neque inceptos lorem orci vitae pretium hendrerit suspendisse quisque eros tempus</p>
+                                        </div>
+                                    </article>
+                                </li>
+                                <li>
+                                    <!-- REVIEW -->
+                                    <article class="comment">
+                                        <div class="comment-author">
+                                            <img src="img/50x50.png" alt="Image Alternative text" title="Afro" />
+                                        </div>
+                                        <div class="comment-inner">
+                                            <ul class="icon-group icon-list-rating comment-review-rate" title="5/5 rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                            </ul><span class="comment-author-name">Frank Mills</span>
+                                            <p class="comment-content">Elit magnis arcu lobortis nec orci a laoreet tristique primis ultrices</p>
+                                        </div>
+                                    </article>
+                                </li>
+                                <li>
+                                    <!-- REVIEW -->
+                                    <article class="comment">
+                                        <div class="comment-author">
+                                            <img src="img/50x50.png" alt="Image Alternative text" title="Bubbles" />
+                                        </div>
+                                        <div class="comment-inner">
+                                            <ul class="icon-group icon-list-rating comment-review-rate" title="5/5 rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                            </ul><span class="comment-author-name">Cyndy Naquin</span>
+                                            <p class="comment-content">Rhoncus tristique malesuada tristique imperdiet habitant netus sociosqu class vehicula magnis vestibulum pretium per</p>
+                                        </div>
+                                    </article>
+                                </li>
+                                <li>
+                                    <!-- REVIEW -->
+                                    <article class="comment">
+                                        <div class="comment-author">
+                                            <img src="img/50x50.png" alt="Image Alternative text" title="Me with the Uke" />
+                                        </div>
+                                        <div class="comment-inner">
+                                            <ul class="icon-group icon-list-rating comment-review-rate" title="5/5 rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                            </ul><span class="comment-author-name">Ava McDonald</span>
+                                            <p class="comment-content">Ullamcorper a montes ligula molestie lacus conubia leo senectus tempus ante porta vulputate dis euismod sagittis risus pretium</p>
+                                        </div>
+                                    </article>
+                                </li>
+                                <li>
+                                    <!-- REVIEW -->
+                                    <article class="comment">
+                                        <div class="comment-author">
+                                            <img src="img/50x50.png" alt="Image Alternative text" title="AMaze" />
+                                        </div>
+                                        <div class="comment-inner">
+                                            <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-o"></i>
+                                                </li>
+                                            </ul><span class="comment-author-name">Carl Butler</span>
+                                            <p class="comment-content">Conubia parturient consequat netus inceptos dapibus platea potenti habitasse eros at fringilla nisl parturient netus ultrices eleifend mus commodo leo sociosqu platea vehicula himenaeos mattis etiam vestibulum pharetra</p>
+                                        </div>
+                                    </article>
+                                </li>
+                                <li>
+                                    <!-- REVIEW -->
+                                    <article class="comment">
+                                        <div class="comment-author">
+                                            <img src="img/50x50.png" alt="Image Alternative text" title="Chiara" />
+                                        </div>
+                                        <div class="comment-inner">
+                                            <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-o"></i>
+                                                </li>
+                                            </ul><span class="comment-author-name">Keith Churchill</span>
+                                            <p class="comment-content">In vivamus nisi nisi lobortis scelerisque quis nisl ligula torquent mattis consectetur netus commodo senectus primis natoque quisque cursus molestie odio primis massa conubia magnis</p>
+                                        </div>
+                                    </article>
+                                </li>
+                                <li>
+                                    <!-- REVIEW -->
+                                    <article class="comment">
+                                        <div class="comment-author">
+                                            <img src="img/50x50.png" alt="Image Alternative text" title="Andrea" />
+                                        </div>
+                                        <div class="comment-inner">
+                                            <ul class="icon-group icon-list-rating comment-review-rate" title="4/5 rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-o"></i>
+                                                </li>
+                                            </ul><span class="comment-author-name">Carl Butler</span>
+                                            <p class="comment-content">Dolor dictumst cras nullam integer libero eget rutrum semper gravida blandit dictumst justo litora lacinia diam pharetra tristique litora</p>
+                                        </div>
+                                    </article>
+                                </li>
+                            </ul><a class="popup-text btn btn-danger" href="#review-dialog" data-effect="mfp-zoom-out"><i class="fa fa-pencil"></i> Add a review</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="gap"></div>
+                <h3>Sản phẩm tương tự</h3>
+                <div class="gap gap-mini"></div>
+
+                <div class="row row-wrap">
+                    <div class="col-sm-6 col-md-4" ng-repeat="x in pinRange">
+                        <div class="product-thumb">
+                            <header class="product-header">
+                                <a ng-href="{{hrf(x)}}"><img class="item" ng-src="{{hrfImg(x.ImageShow||x.Image)}}" alt="Image Alternative text" title="" /></a>
+                            </header>
+                            <div class="product-inner">
+                                <h5 class="product-title">{{x.Name}}</h5>
+                                <div class="product-meta">
+                                    <ul class="product-price-list">
+                                        <li>
+                                            <span class="product-price">{{toCc(x.Price)}}&nbsp;<sup style="text-decoration:underline">đ</sup></span>
+                                        </li>
+                                        <li>
+                                            <span class="product-old-price">{{x.OldPrice?toCc(x.OldPrice):null}}&nbsp;<sup ng-show="x.OldPrice" style="text-decoration:underline">đ</sup></span>
+                                        </li>
+                                    </ul>
+                                    <ul class="product-price-list">
+                                        <li style="margin-top:5px; cursor:pointer" class="" ng-click="addtoCart(x)"><span class="btn-warning"><i class="fa fa-shopping-cart"></i> Mua</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>	<div class="clearfix"></div>
+
+                <div class="gap gap-small"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src=""></script>
+}

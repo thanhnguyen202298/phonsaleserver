@@ -1,0 +1,915 @@
+﻿<!DOCTYPE HTML>
+<html ng-app="ahihi">
+<head>
+    <title>@ViewBag.Title</title>
+    <!-- meta info -->
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="keywords" content="Koupon HTML5 Template" />
+    <meta name="description" content="Koupon - Premiun HTML5 Template for Coupons Website">
+    <meta name="author" content="Tsoy">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="/content/css/boostrap.css">
+    <!-- Font Awesome styles (icons) -->
+    <link rel="stylesheet" href="/content/css/font_awesome.css">
+    <!-- Main Template styles -->
+    <link rel="stylesheet" href="/content/css/styles.css">
+    <!-- IE 8 Fallback -->
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/css" href="/content/css/ie.css" />
+    <![endif]-->
+    <!-- Your custom styles (blank file) -->
+    <link rel="stylesheet" href="/content/css/mystyles.css">
+    <style>
+        .tolisspec ul li {
+            list-style: none;
+            line-height: 30px;
+            background: #fff;
+            border-bottom: solid 1px #febfbf;
+            font-size: 16px;
+            font-weight: bold
+        }
+        
+    </style>
+</head>
+<body class="boxed" ng-controller="totalCTL">
+
+    <div class="global-wrap">
+
+        <!-- //////////////////////////////////
+    //////////////MAIN HEADER/////////////
+    ////////////////////////////////////-->
+
+        <header class="main navbar-fixed-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2 text-center">
+                        <div class="">
+                            <a href="/" class="logo mt5">
+                                <img src="/Content\img/logo.jpg" alt="Image Alternative text" title="Image Title" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- MAIN NAVIGATION -->
+                        <div class="flexnav-menu-button" id="flexnav-menu-button">Menu</div>
+                        <nav>
+                            <ul class="nav nav-pills flexnav" id="flexnav" data-breakpoint="800">
+                                <li ng-class="{'active':currentLink(x)}" ng-repeat="x in MenuItems">
+                                    <a ng-href="{{hrfCat(x)}}">{{x.Name}}</a>
+                                    <ul>
+                                        <li>
+                                            <a href="index-shop-layout-1.html">Shop Layout</a>
+                                            <ul>
+                                                <li>
+                                                    <a href="index-shop-layout-1.html">Layout 1</a>
+                                                </li>
+                                                <li>
+                                                    <a href="index-shop-layout-2.html">Layout 2</a>
+                                                </li>
+                                                <li>
+                                                    <a href="index-shop-layout-3.html">Layout 3</a>
+                                                </li>
+                                                <li>
+                                                    <a href="index-shop-layout-4.html">Layout 4</a>
+                                                </li>
+                                                <li>
+                                                    <a href="index-shop-layout-5.html">Layout 5</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                        <!-- END MAIN NAVIGATION -->
+                    </div>
+                    <div class="col-md-4">
+                        <!-- LOGIN REGISTER LINKS -->
+                        <ul class="login-register">
+                            <li class="shopping-cart">
+                                <a href="/Home/ViewCart"><i class="fa fa-shopping-cart"></i>Giỏ hàng</a>
+                                <div class="shopping-cart-box">
+                                    <ul class="shopping-cart-items" ng-repeat="i in Ord.ListDetails">
+                                        <li>
+                                            <a ng-href="{{hrf(i)}}">
+                                                <img ng-src="{{hrfImg(id2Img(i.ProductId))}}" alt="Bạn đã mua" title="AMaze" />
+                                                <h5>{{cartmp.Name}}</h5><span class="shopping-cart-item-price">{{toCc(i.Price)}}&nbsp;x{{toCc(i.Quantity)}}&nbsp;</span>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                    <ul class="list-inline text-center">
+                                        <li>
+                                            <a id="#callAddDlg" href="#checkout_dialog" class="popup-text"><i class="fa fa-check-square"></i> Thanh toán</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li id="statusUs">
+                                <a class="popup-text" href="#login-dialog" data-effect="mfp-move-from-top"><i class="fa fa-sign-in"></i>Sign in</a>
+                            </li>
+                            <li id="statusSU">
+                                <a class="popup-text" href="#register-dialog" data-effect="mfp-move-from-top"><i class="fa fa-edit"></i>Sign up</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- LOGIN REGISTER LINKS CONTENT -->
+        <div id="login-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
+            <i class="fa fa-sign-in dialog-icon"></i>
+            <h3>Member Login</h3>
+            <h5>Welcome back, friend. Login to get started</h5>
+            <form ng-submit="login()" name="loginform" class="dialog-form">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input ng-model="lous.Email" type="email" placeholder="email@domain.com" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input pattern=".{7,}$" name="loinpw" ng-model="lous.CkCode" required type="password" placeholder="My secret password" class="form-control">
+                    @*^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)*@
+                    <div class="text-danger" ng-show="loginform.loinpw.$error.required">vui lòng nhập thông tin</div>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">ghi nhớ mật khẩu
+                    </label>
+                </div>
+                <input type="submit" value="Sign in" class="btn btn-danger">
+            </form>
+            <ul class="dialog-alt-links">
+                <li>
+                    <a class="popup-text" href="#register-dialog" data-effect="mfp-zoom-out">chưa có tài khoản</a>
+                </li>
+                <li>
+                    <a class="popup-text" href="#password-recover-dialog" data-effect="mfp-zoom-out">quên mật khẩu</a>
+                </li>
+            </ul>
+        </div>
+        <!---gio hang fixed-position->
+    @*<div style="z-index:30;position:fixed;top:100px;right:2px;background:#c60f0f;" class="shopping-cart">
+        <a style="color:#fff;font-weight:bold;margin:5px" href="#"><i class="fa fa-shopping-cart"></i>Giỏ hàng</a>
+        <div class="shopping-cart-box">
+            <ul class="shopping-cart-items" ng-repeat="i in Ord.ListDetails">
+                <li>
+                    <a ng-href="{{hrf(i.ProductId)}}">
+                        <img ng-src="{{hrfImg(id2Img(i.ProductId))}}" alt="Bạn đã mua" title="AMaze" />
+                        <h5>{{cartmp.Name}}</h5><span class="shopping-cart-item-price">{{toCc(i.Price)}}</span>
+                    </a>
+                </li>
+
+            </ul>
+            <ul class="list-inline text-center">
+                <li>
+                    <a href="/Home/ViewCart"><i class="fa fa-shopping-cart"></i>Xem giỏ hàng</a>
+                </li>
+                <li>
+                    <a href="page-checkout.html"><i class="fa fa-check-square"></i> Thanh toán</a>
+                </li>
+            </ul>
+        </div>
+    </div>*@
+
+    <!--fixed gio hang-->
+        <!--chand check out order-->
+        <div id="checkout_dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
+            <i class="fa fa-sign-in dialog-icon"></i>
+            <h3>Thanh Toán</h3>
+            <div ng-hide="usacc.ID.length>10">
+                <h5>Bạn vui lòng để lại thông tin, (chúng tôi sẽ liên lạc và giao hàng) </h5>
+                <form ng-submit="ausnrgter(1)" name="infoLog" class="dialog-form" novalidate>
+                    <div class="form-group">
+                        <input name="hoten" ng-model="usacc.Name" required maxlength="50" type="text" placeholder="Họ và tên" class="form-control">
+                        <div class="text-danger" ng-show="regisform.hoten.$error.required">vui lòng nhập thông tin</div>
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input ng-model="usacc.Email" type="email" placeholder="email@domain.com" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <input name="phone" ng-model="usacc.Phone" required type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="11" placeholder="09(01)xxxxx" class="form-control">
+                        <div class="text-danger" ng-show="regisform.phone.$error.required">vui lòng nhập thông tin</div>
+                    </div>
+
+                    <input type="submit" value="Gửi" class="btn btn-danger">
+                </form>
+            </div>
+            <div ng-show="usacc.ID.length>10">
+                <h5>Xin cảm ơn quý khách. <p></p> Chúng tôi sẽ liên lạc và giao hàng theo số điện thoại quý khách đã đăng ký<p><p></p> Vui lòng bấm gửi để chúng tôi duyệt đơn hàng</p> </h5>
+                <form ng-submit="activeOrder()" name="sendordr" class="dialog-form">
+
+                    <input type="submit" value="Gửi đơn hàng" class="btn btn-danger">
+                </form>
+            </div>
+            <ul class="dialog-alt-links">
+                <li>
+                    <button class="mfp-close" style="margin-top:-30px;margin-left:-50px;font-size:15px" data-effect="mfp-zoom-out">Thoát</button>
+                </li>
+
+            </ul>
+        </div>
+
+        <!--chdnd order chekcout-->
+        <!-- dã thêm giỏ hàng-->
+        <div class="modal modal-primary" id="incart_modal">
+            <div class="modal-dialog" style="width:180px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title"> Cảm ơn bạn đã mua <p style="font-weight:600;"> {{newMua}}</p></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- dã thêm giỏ hàng-->
+
+        <div id="register-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
+            <i class="fa fa-edit dialog-icon"></i>
+            <h3>Đăng ký thành viên</h3>
+            <h5>Vui lòng đăng ký để nhận được thông tin mới nhất về chính sách bán hàng của chúng tôi</h5>
+            <form name="regisform" ng-submit="ausnrgter()" class="dialog-form" novalidate>
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input name="hoten" ng-model="usacc.Name" required maxlength="50" type="text" placeholder="Họ và tên" class="form-control">
+                    <div class="text-danger" ng-show="regisform.hoten.$error.required">vui lòng nhập thông tin</div>
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input name="email" ng-model="usacc.Email" required type="email" placeholder="email@domain.com" class="form-control">
+                    <div class="text-danger" ng-show="regisform.email.$error.required">vui lòng nhập thông tin</div>
+                    <div class="text-danger" ng-show="!regisform.email.$valid">sai định dạng email</div>
+
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input name="pwd" pattern=".{7,}" title="mật khẩu từ 7 ký tự trở lên" ng-model="iiwff" type="password" required placeholder="My secret password" class="form-control">
+                    <div class="text-danger" ng-show="regisform.pwd.$error.required">vui lòng nhập thông tin</div>
+                    <div class="text-danger" ng-show="iiwff.length<7">mật khẩu từ 7 ký tự trở lên</div>
+
+                </div>
+                <div class="form-group">
+                    <label>Nhập lại Password</label>
+                    <input type="password" ng-keyup="" ng-model="ckpw" id="pass2" required placeholder="Type your password again" class="form-control">
+                    <div class="text-danger" ng-show="ckpw!=iiwff">mật khẩu không giống</div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input name="phone" ng-model="usacc.Phone" required type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="11" placeholder="09(01)xxxxx" class="form-control">
+                            <div class="text-danger" ng-show="regisform.phone.$error.required">vui lòng nhập thông tin</div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" />Đồng ý với các điều khoản sử dụng Website
+                    </label>
+                </div>
+                <input type="submit" value="Sign up" class="btn btn-primary">
+            </form>
+            <ul class="dialog-alt-links">
+                <li>
+                    <a class="popup-text" href="#login-dialog" data-effect="mfp-zoom-out">Đã có tài khoản</a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="password-recover-dialog" class="mfp-with-anim mfp-hide mfp-dialog clearfix">
+            <i class="icon-retweet dialog-icon"></i>
+            <h3>Password Recovery</h3>
+            <h5>Fortgot your password? Don't worry we can deal with it</h5>
+            <form class="dialog-form">
+                <label>E-mail</label>
+                <input type="text" placeholder="email@domain.com" class="span12">
+                <input type="submit" value="Request new password" class="btn btn-primary">
+            </form>
+        </div>
+        <!-- END LOGIN REGISTER LINKS CONTENT -->
+        <!-- TOP AREA -->
+        <div class="top-area" ng-hide="hideinDetail()">
+            <div class="col-sm-8 col-md-7 owl-carousel owl-slider" id="owl-carousel-slider" data-inner-pagination="true" data-white-pagination="true">
+                <div ng-repeat="j in KMs" >
+                    <div class="bg-holder">
+                        <img ng-src="{{hrfImg(j.Image)}}" alt="Image Alternative text" style="height:400px" title="" />
+                        <div class="bg-mask"></div>
+                        <div class="bg-front vert-center text-white text-center">
+                            <h2 class="text-hero">{{j.Name}} {{j.Time}} </h2>
+                            @*<div class="countdown countdown-big" data-countdown="Jul 16, 2014 5:30:00"></div>*@
+                            <a class="btn btn-lg btn-ghost btn-white" ng-href="{{hrf(j)}}">{{j.SaleOff||'mua ngay'}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-md-5" style="height:400px;overflow:hidden;">
+                <ul class="thumb-list">
+                    <li ng-repeat="x in Items">
+                        <a ng-href="{{hrf(x)}}">
+                            <img ng-src="{{hrfImg(x.ImageShow)}}" alt="Image Alternative text" title="{{x.Name}}" />
+                        </a>
+                        <div class="thumb-list-item-caption">
+                            <h5 class="thumb-list-item-title"><a ng-href="{{hrf(x)}}">{{x.Name}}</a></h5>
+                            <p style="font-size:15px;font-weight:600;color:#d12d2d" class="thumb-list-item-price">{{toCc(x.Price)}}</pstyle="font-size:18px;font-weight:bold;color:#d12d2d">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- END TOP AREA -->
+        <!-- SEARCH AREA -->
+        <form class="search-area form-group">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 clearfix">
+                        <label>
+                            <i class="fa fa-search"></i><span></span>
+                        </label>
+                        <div class="search-area-division search-area-division-input">
+                            <input ng-model="seark" class="form-control col-md-6" type="text" placeholder="nhập thông tin cần tìm" />
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-block btn-danger search-btn" type="submit">Tìm</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END SEARCH AREA -->
+        <!-- //////////////////////////////////
+    //////////////END MAIN HEADER//////////
+    ////////////////////////////////////-->
+        <!-- //////////////////////////////////
+    //////////////PAGE CONTENT/////////////
+    ////////////////////////////////////-->
+
+        <div class="container" style="background:#fff;width:100%">
+            <div ng-hide="" class="row">
+                <div class="col-md-12 text-center" style="display:inline;overflow-y:hidden;height:100px">
+                    <div class="" style="float:left; margin:20px;display:inline-block" ng-repeat="x in brands">
+                        <a ng-href="{{hrfCat(x)}}">
+                            <img ng-src="{{x.Image}}" style="width:inherit;height:70px" alt="Alternate Text" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="gap"></div>
+            @RenderSection("DetailProduct", false)
+        </div>
+        <div class="bg-holder">
+            @*ng-hide="hideinCate()||(seark!=null&&seark!='')"*@
+
+            <div class="container bg-holder-content">
+                <p style="font:16px;text-align:left;color:brown;border-bottom:1px solid #ff6a00;">
+                    Sản phẩm mới nhất
+                <p></p>
+                </p>
+                <div class="row row-wrap">
+                    <div class="owl-carousel" id="owl-carousel" data-items="4">
+                        <div ng-repeat="f in Items">
+                            <div class="product-thumb">
+                                <a ng-href="{{hrf(f)}}">
+                                    <header class="product-header">
+                                        <img class="item" ng-src="{{hrfImg(f.ImageShow||f.Image)}}" alt="Image Alternative text" title="Gamer Chick" />
+                                    </header>
+                                    <div class="product-inner">
+                                        <h5 class="product-title">{{f.Name}}</h5>
+                                        @*<p class="product-desciption"><span ng-bind-html="ToHtmlText(f.Description)"></span></p>*@
+                                        <ul class="product-price-list">
+                                            <li>
+                                                <span class="product-price">{{toCc(f.Price)}}</span>
+                                            </li>
+                                            <li>
+                                                <span class="product-old-price">{{f.OldPrice.length>5?toCc(f.OldPrice):null}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><p></p>	<a href="/Category/?bb14c3ea-27d7-41fb-a687-a9c2f02fcc8d" class="btn btn-default btn-lg btn-ghost">Xem Thêm</a>
+
+            </div>
+        </div>
+        <div class="gap"></div>
+        <div class="container">
+            <div class="text-center">
+
+                @RenderBody()
+            </div>
+            <div class="gap"></div>
+        </div>
+
+
+        <!-- //////////////////////////////////
+    //////////////END PAGE CONTENT/////////
+    ////////////////////////////////////-->
+        <!-- //////////////////////////////////
+    //////////////MAIN FOOTER//////////////
+    ////////////////////////////////////-->
+        <footer class="main">
+            <div class="footer-top-area">
+                <div class="container">
+                    <div class="row row-wrap">
+                        <div class="col-md-3">
+                            <a href="/" class="logo mt5">
+                                <img style="width:200px;height:inherit" src="/Content\img/logo.jpg" alt="logo" title="logo" class="logo">
+                            </a>
+                            <ul class="list list-social">
+                                <li>
+                                    <a class="fa fa-facebook box-icon" href="#" data-toggle="tooltip" title="Facebook"></a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img style="width:35px;height:inherit;border:1px solid #fff;border-radius:3px" src="\Content\img/zalo.jpg" href="#" data-toggle="tooltip" title="zalo An Lộc Nguyên"></img>
+                                    </a>
+                                </li>
+                                @*<li>
+                                    <a class="fa fa-flickr box-icon" href="#" data-toggle="tooltip" title="Flickr"></a>
+                                </li>
+                                <li>
+                                    <a class="fa fa-linkedin box-icon" href="#" data-toggle="tooltip" title="LinkedIn"></a>
+                                </li>
+                                <li>
+                                    <a class="fa fa-tumblr box-icon" href="#" data-toggle="tooltip" title="Tumblr"></a>
+                                                        </li>*@
+                            </ul>
+                            <p>Nhà cung cấp điện thoại di động uy tín. Trên 15 Năm (2003 - 2018) uy tín và kinh nghiệm phân phối điện thoại và smartphone, Tablet. Luôn đem đến sự an tâm và hài lòng cho quý khách bằng các sản phảm chất lượng</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h4 class="label label-default" style="font-size:14px;">Các Chi Nhánh</h4>
+                            <div class="box" style="background:#808080;margin-top:3px;border-top-left-radius:0px;">
+                                <h4> <i style="font-weight:bold"> HCM:</i> Hồ Chí Minh.</h4>
+                                <h4> <i style="font-weight:bold"></i> .</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h4></h4>
+                            <!-- START TWITTER -->
+                            @*<div class="twitter-ticker" id="twitter-ticker"></div>*@
+                            <!-- END TWITTER -->
+                        </div>
+                        <div class="col-md-3">
+                            <h4> </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>Copyright © 2014, {{company}}, All Rights Reserved</p>
+                        </div>
+                        <div class="col-md-6 col-md-offset-2">
+                            <div class="pull-right">
+                                <ul class="list-inline list-payment">
+                                    <li>
+                                        <img src="/content/img/payment/american-express-curved-32px.png" alt="Image Alternative text" title="Image Title" />
+                                    </li>
+                                    <li>
+                                        <img src="/content/img/payment/cirrus-curved-32px.png" alt="Image Alternative text" title="Image Title" />
+                                    </li>
+                                    <li>
+                                        <img src="/content/img/payment/discover-curved-32px.png" alt="Image Alternative text" title="Image Title" />
+                                    </li>
+                                    <li>
+                                        <img src="/content/img/payment/ebay-curved-32px.png" alt="Image Alternative text" title="Image Title" />
+                                    </li>
+                                    <li>
+                                        <img src="/content/img/payment/maestro-curved-32px.png" alt="Image Alternative text" title="Image Title" />
+                                    </li>
+                                    <li>
+                                        <img src="/content/img/payment/mastercard-curved-32px.png" alt="Image Alternative text" title="Image Title" />
+                                    </li>
+                                    <li>
+                                        <img src="/content/img/payment/visa-curved-32px.png" alt="Image Alternative text" title="Image Title" />
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- //////////////////////////////////
+    //////////////END MAIN  FOOTER/////////
+    ////////////////////////////////////-->
+        <!-- Scripts queries -->
+
+        <script src="/content/js/jquery.js"></script>
+        <script src="/content/js/boostrap.min.js"></script>
+        <script src="/content/js/countdown.min.js"></script>
+        <script src="/content/js/flexnav.min.js"></script>
+        <script src="/content/js/magnific.js"></script>
+        <script src="/content/js/tweet.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+        <script src="/content/js/fitvids.min.js"></script>
+        <script src="/content/js/mail.min.js"></script>
+        <script src="/content/js/ionrangeslider.js"></script>
+        <script src="/content/js/icheck.js"></script>
+        <script src="/content/js/card-payment.js"></script>
+        <script src="/content/js/masonry.js"></script>
+        <script src="/content/js/nicescroll.js"></script>
+
+        <script src="/content/js/owl-carousel.js"></script>
+        <!-- Custom scripts -->
+        <script src="/content/js/custom.js"></script>
+    </div>
+    <input type="hidden" id="hdnSession" data-value="@Request.RequestContext.HttpContext.Session["UsN"]" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script>
+        var app = angular.module('ahihi', []);
+
+        //Menu controller
+        app.controller("totalCTL", ["$scope", "$http","$sce", function ($scope, $http, $sce) {
+            m = $scope;
+            m.ordSum = '0';
+            m.ordFee = '0';
+            m.ordtotal = '0';
+            m.ordTax = '0';
+            //Menu
+            m.MenuItems = [];
+            m.KMs = [];
+            m.Items = [];
+            m.cartmp;
+            //nhaxn hieu
+            m.brands = []
+
+            m.vieweds = []
+            //Detailsss
+            m.ProductDetails = {}
+            m.filtter = false;
+            m.pupolarItem = [];
+            firstPromo = [];
+            
+            var pat = window.location.pathname;
+            m.isDetails = pat.indexOf('Production') > -1;
+            m.isCate = pat.indexOf('Category') > -1;
+            m.ishome = pat.length < 10;
+            m.idcate = m.isCate ? location.href.substr(location.href.indexOf('?') + 1) : '';
+            if (m.ishome || m.isCate) $(".global-wrap").css('background', '#fff');
+
+            m.hideinDetail = function () {
+                return m.isDetails
+            }
+            m.hideinCate = function () {
+
+                return m.isCate
+            }
+
+            m.hideAll = function () {
+                m.isDetails = m.isCate = true
+            }
+
+            m.currentLink = function (x) {
+                //go with attribute    ng-class="{'active':currentLink(x)}"
+                var l = window.location.pathname.toLowerCase();
+                if (l == '/')
+                    if (x.Name == 'HOME')
+                        return true;
+                return (l.includes("/" + x.ID) || window.location.href.endsWith("?" + x.ID))
+            }
+
+            m.hrfCat = function (x) {
+                if (x.ID == 'home') {
+                    return '/'
+                }
+                return '/Category/?' + x.ID
+            }
+
+            m.hrfImg = function (url) {
+                if (url)
+                    if (url.length > 4)
+                        return url.split(';')[0]
+                return ''
+            }
+
+            m.hrf = function (x) {
+                if (typeof x.ID != undefined) {
+                    if (x.url != null && x.url != undefined)
+                        return '/Production/?name=' + x.url;
+                    return '/Production/?' + x.ID;
+                }
+                return '/Production/?' + x.ProductId
+            }
+
+            m.id2Img = function (id) {
+                m.cartmp = m.Items.filter(function (x) {
+                    return x.ID == id
+                })[0]
+                return m.cartmp.ImageShow
+            }
+            m.ToHtmlText = function (html) {
+                return $sce.trustAsHtml(html);
+            }
+
+            m.toCc = function (n) {
+                if (n) {
+                    n = Number(n)
+                    return n.toLocaleString('de-DE')
+                }
+            }        
+            
+            var initKM = function () {
+                setTimeout(function () {
+                    // owlSliderPagination = owlCarouselSlider.attr('data-pagination');
+                    var owlCarouselSlider = $('#owl-carousel-slider'),
+                        owlNav = owlCarouselSlider.attr('data-nav');
+
+                    owlCarouselSlider.owlCarousel({
+                        slideSpeed: 300,
+                        paginationSpeed: 400,
+                        
+                        // pagination: owlSliderPagination,
+                        singleItem: true,
+                        navigation: true,
+                        navigationText: ['', ''],
+                        transitionStyle: 'goDown',
+                         autoPlay: 3000
+                    });
+                    $(".owl-item").css("width", "700px");
+                }, 700)
+            }
+            m.cate = [];
+            m.getMenuItems = function () {
+                $http.get("/Category/GetAll").then(function (rs) {
+                    m.cate = rs.data
+                    m.brands = m.cate.filter(x => { return x.Description.indexOf('[brands]') > -1 })
+                    m.brands.sort((e, f) => { return f.Level - e.Level })
+
+                    m.MenuItems = m.cate.filter(x => { return x.Level == '1' });
+                    m.MenuItems = m.MenuItems.forEach((v, i) => {
+                        if (v.Parent != null && v.Parent != "") {
+                            m.MenuItems.find()
+                        }
+                    });
+                    m.MenuItems.unshift({ ID: 'home', Name: 'HOME' })
+                });
+            }
+            m.getMenuItems();
+
+            //Promotion
+            m.getKM = () => {
+                $http.get("/Production/getProd").then(function (rs) {
+                    m.KMs = rs.data
+
+                    $(document).ready(function () {
+                        initKM()
+                    });
+                });
+            }
+            
+            m.getKM()            
+
+            m.fv = function () {
+                m.usacc.CkCode = m.iiwff;
+            }
+            var viewsget = function () {
+                m.vieweds = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Session["vieweds"], Newtonsoft.Json.Formatting.Indented))||[];
+            }
+            var setLoadedProd = function () {
+                setTimeout(function () {
+                    $(document).ready(function () {
+                        $.getScript("/content/js/fotorama.js");
+                        $("li:contains(':')").css("font-weight", "300");//style speccifica
+
+
+                        // Bootstrap carousel
+                        $('#my-carousel >.carousel-inner > div:first-child').addClass('active')
+                        $('.carousel').carousel({
+                            interval: 2000
+                        });
+                    });
+                }, 5)
+
+                //var tag = document.createElement("script");
+                //tag.src = "/JavaScriptTest";
+                //document.getElementsByTagName("head")[0].appendChild(tag);
+            }
+            var viewspsave = function () {
+                $http.post('/Production/viewedProd', JSON.stringify(m.vieweds)).then(function (res) {
+
+                })
+            }
+            m.getProDetails = function () {
+                if (m.isDetails) {
+                    viewsget();
+                    var id = window.location.href;
+                    if (id.indexOf('?') > -1) {
+                        id = id.substr(id.indexOf('?') + 1)
+                        if (id.length > 2) {
+                            $http.get("/Production/getDetail/?id=" + id).then(function (res) {
+                                m.ProductDetails = res.data;
+                                setLoadedProd();
+                                if (m.vieweds.filter(x => { return x.ID == m.ProductDetails.ID }).length < 1) {
+                                    m.vieweds.push(m.ProductDetails);
+                                    viewspsave();
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+            m.company44 = 'An Lộc Nguyên';
+            m.Address=[]
+            m.getProDetails()
+            m.pupolarItem = []
+            m.rankingboard=[]
+            m.getPopuIt = function () {
+                var k = angular.copy(m.Items);
+                m.vieweds.forEach(function (x) {
+                    k.forEach(function (v, i) {
+                        if (v.ID == x.ID) {
+                            k.splice(i, 1); return
+                        }
+                    })
+                });
+                m.pupolarItem = k;
+                m.pupolarItem.splice(9, m.pupolarItem.length - 8);
+            }
+
+            m.ranking = function () {
+                var k = angular.copy(m.Items);
+                k.sort((x, y) => {
+                    return x.Ranking - y.Ranking;
+                })
+                k.splice(9, k.length - 8);
+                m.rankingboard = k;
+            }
+        //hot deal controller
+            m.getItems = function () {
+                $http.get("/Production/getProd").then(function (rs) {
+                    m.Items = rs.data
+                    if (m.isDetails) {
+                        var min = Number(m.ProductDetails.Price) - 1000000;
+                        var max = Number(m.ProductDetails.Price) + 1000000;
+                        m.pinRange = m.Items.filter(function (x) {
+                            if (x.ID != m.ProductDetails.ID)
+                                if ((min < Number(x.Price)) && (Number(x.Price) < max))
+                                    return true;
+                            return false;
+                        })
+                        m.getPopuIt();
+                        m.ranking();
+                    }
+                    $(document).ready(function () {
+                        initHotDeal()
+                        $http.get('/Production/getcart').then(function (res) {
+                            m.Ord = res.data;
+                            if (!m.Ord) m.Ord = { ListDetails: [] };
+                            m.getSum()
+                        });
+                                               
+                    })
+                });
+            }
+            
+                m.getItems();
+            var v = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Session["Usn"], Newtonsoft.Json.Formatting.Indented));
+            //////////
+            var initHotDeal = function () {
+                setTimeout(function () {
+                    // Owl Carousel
+                    var owlCarousel = $('#owl-carousel'),
+                        owlItems = owlCarousel.attr('data-items');
+
+                    owlCarousel.owlCarousel({
+                        items: owlItems,
+                        navigation: true,
+                        navigationText: ['', '']
+                    });
+
+                }, 700)
+            }
+                        
+           
+            m.usacc = v
+            ////check hredffff
+
+            //contentssss
+
+            //SIgn up
+            m.checkEmail = function () {
+                if (m.usacc.Email.lastIndexOf('.') - m.usacc.Email.length<4) {
+                    return true
+                }
+                return false
+            }
+
+            m.ausnrgter = function (cout) {
+                if (m.regisform.$valid || m.infoLog.$valid) {
+                    m.fv()
+                    $http.post('/Usacc/takegister', JSON.stringify(m.usacc)).then(function (res) {
+                        if (cout)m.activeOrder()
+                        window.location.reload()
+                    })
+
+                } else alert('vui lòng điền đầy đủ thông tin')
+            }
+
+            var checkedloged = function () {
+                if (m.usacc)
+                    if (m.usacc.ID.length > 10) {
+                    $('#statusUs').html('<a href="/Usacc/info"><i class="fa fa-user"></i> Chào ' + m.usacc.Name + '</a>')
+                    $('#statusSU').html('<a href="#" onclick="logout()"><i class="fa fa-sign-out"></i>Log Out</a>')
+
+                }
+            }
+            checkedloged()
+
+            m.login = function () {
+
+                $http.post('/Usacc/login', JSON.stringify(m.lous)).then(function (res) {
+                    var s = JSON.stringify(res.data)
+                    if (s.indexOf('-12345false') > -1) { alert("Tên hoặc mật khẩu không đúng, vui lòng nhập lại"); return; }
+                    m.usacc = res.data
+                    window.location.reload()
+                })
+            }
+
+            //
+
+            ////////create order
+
+            m.addtoCart = function (p) {
+                if (p.ID) {
+                    var l = m.Ord.ListDetails.filter(x => { return x.ProductId == p.ID }).length;
+
+                    if (l < 1)
+                        m.Ord.ListDetails.push({ ProductId: p.ID, Quantity: 1, Price: p.Price, Amount: p.Price });
+                    else
+                        m.Ord.ListDetails.forEach(function (v, i) {
+                            if (v.ProductId == p.ID) {
+                                v.Quantity++;
+                                v.Amount = Number(v.Amount) + Number(p.Price)
+                                return;
+                            }
+                        });
+                    m.newMua = p.Name;
+                    //
+                    //document.cookie = JSON.stringify(m.Odetails) + ';max-age=90;path=/'
+                    $http.post('/Production/addedCart', JSON.stringify(m.Ord)).then(function (res) {
+                        $("#incart_modal").modal('show')
+                        setTimeout(function () { $("#incart_modal").modal('hide') }, 2000);
+                    })
+                }
+            }
+
+            m.updateAmount = function (itcart,n) {
+                itcart.Quantity += n
+                itcart.Amount = Number(itcart.Price) * Number(itcart.Quantity)
+
+                m.getSum()
+            }
+            m.getSum = function () {
+                m.ordSum = 0;
+                m.Ord.ListDetails.forEach(function (t, i) {
+                    m.ordSum = Number(m.ordSum) + Number(t.Amount)
+                })
+
+                m.ordtotal = Number(m.ordSum) + Number(m.ordFee)
+            }
+
+            m.updateCart = function () {
+                $http.post('/Production/addedCart', JSON.stringify(m.Ord)).then(function (res) {
+
+                })
+            }
+            m.activeOrder = function () {
+                $http.post('/Production/checkoutOrder', null).then(function (res) {
+                    var s = JSON.stringify(res.data)
+                    if (s.indexOf('-1') >= 0) {
+                        alert("xin cảm ơn")
+
+                    }
+
+                })
+            }
+           
+        }])
+        
+        logout = function () {
+
+            $.post('/Usacc/imout').then(function (res) {
+                window.location.reload()
+            })
+        }
+    </script>
+    @RenderSection("Scription", false)
+</body>
+</html>

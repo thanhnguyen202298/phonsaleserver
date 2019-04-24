@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewBag.Title = "Tạo template cho thông số sản phẩm!!!";
+    Layout = "~/Views/Shared/ClientLayout.cshtml";
+}
+
+<div class="box col-md-12" ng-controller="TmplController">
+
+    <div class="box-body">
+        <div class="col-xs-12">
+            <form ng-submit="Save()" name="tmpadd" novalidate>
+                <div class="box box-solid box-primary">
+                    <div class="box-body">
+                        <div class="label-primary">Nhập tên template</div>
+                        <input type="text" class="form-control" name="name" ng-model="tmp.Name" required maxlength="10" />
+                        <div class="text-danger" ng-show="tmpadd.name.$error.required">khong dc de trong</div>
+                        <p></p>
+                        <div class="label-success"> chọn thông số áp dụng cho template</div>
+                        <div class="col-md-3 col-sm-4 col-xs-12" ng-repeat="x in listSpecs">
+                            <input type="checkbox" ng-checked="IsAdded(x.ID)" id="checkbox_{{x.ID}}" ng-click="insert(x)" name="{{x.ID}}" /> {{x.Name}}
+                        </div>
+                        <p class="clearfix"></p>
+                        <div style="text-align:center">
+                            <button type="submit" ng-disabled="edit" class="btn btn-success">Lưu</button>
+                            <button type="reset" ng-click="edit=false;tmp={MapTmpSpecs: []}" class="btn btn-warning">Tạo mới</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-xs-12">
+            <div class="box box-solid box-warning">
+                <div class="box-title label-warning">Danh sách template đã thêm</div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-order">
+                        <tr>
+                            <th>#</th>
+                            <th>Tên template</th>
+                            <th>Các thông số sử dụng</th>
+                            <th>#</th>
+                        </tr>
+                        <tr ng-class="{'label-info':edit==x.ID}" ng-click="tmpchosen(x)" ng-repeat="x in templs">
+                            <td style="width:15px">{{$index+1}}</td>
+                            <td class="col-xs-2">{{x.Name}}</td>
+                            <td class="col-xs-8">
+                                <div style="margin:3px;float:left" class="label label-primary" ng-repeat="i in x.MapTmpSpecs">
+                                    {{$index +". "+getNamespec(i)}}
+                                </div>
+                            </td>
+                            <td class="col-xs-12">
+                                <button class="btn btn-xs btn-success" ng-click="updateaTmp(x)" ng-disabled="edit!=x.ID">Update</button>
+                                <button class="btn btn-xs btn-danger" ng-disabled="edit!=x.ID" ng-click="deletetmp(x)">Remove</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scription{
+    <script>
+        app.controller("TmplController", ["$scope", "$http", function ($scope, $http) {
+            t = $scope
+            t.tmp = {
+                MapTmpSpecs: []
+            }
+            t.edit = false;
+            t.getNamespec = (i) => {
+                return t.listSpecs.filter(x => { return x.ID == i.SpecID })[0].Name
+            }
+
+            t.insert = function (x) {
+                var checked = $('#checkbox_' + x.ID).is(':checked');
+                x = { "SpecID": x.ID }
+                if (checked) t.tmp.MapTmpSpecs.push(x)
+                else {
+                    var old = t.tmp.MapTmpSpecs.filter(e => {return e.SpecID == x.SpecID })[0];
+                    var index = t.tmp.MapTmpSpecs.indexOf(old);
+                    t.tmp.MapTmpSpecs.splice(index, 1);
+                }
+            }
+
+            t.tmpchosen = (x) => {
+                t.tmp = x
+                t.edit = x.ID
+            }
+
+            t.IsAdded = function (Id) {
+                if (t.tmp.MapTmpSpecs)
+                    return t.tmp.MapTmpSpecs.filter(function (e) { return e.SpecID == Id }).length > 0;
+                else return false
+            }
+
+            t.Save = function () {
+                if (t.edit != t.tmp.ID && t.tmpadd.$valid)
+                    $http.post("/Category/saveTempl", JSON.stringify(t.tmp)).then(function (res) {
+                        t.tmp.ID = res.data
+                        t.templs.unshift(t.tmp)
+                        t.tmp = { MapTmpSpecs: []}
+                    })
+            }
+
+            t.listSpecs = {}
+
+            t.getList = function () {
+                $http.get("/Category/getSpecification").then(function (res) {
+                    t.listSpecs = res.data
+                })
+            }
+            t.getList()
+            t.templs = {}
+            t.getTmps = function () {
+                $http.get("/Category/getTemplate").then(function (res) {
+                    t.templs = res.data
+                })
+            }
+
+            t.getTmps()
+
+            t.deletetmp = function (x) {
+                    $http.delete("/Category/deletetmp?ID=" + x.ID).then(function (res) {
+                        t.templs.splice(t.templs.indexOf(x), 1)
+                        t.edit = false
+                        alert(res.data + " has been deleted")
+                    })
+            }
+
+            t.updateaTmp=(x)=>{
+                    $http.put("/Category/updateaTmp", JSON.stringify(x)).then(function (res) {
+                        t.edit = false
+                        t.tmp = { MapTmpSpecs: [] }
+                        alert(" has been updated")
+                    })
+            }
+
+        }])
+
+    </script>
+}
+
